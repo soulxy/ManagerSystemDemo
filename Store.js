@@ -23,4 +23,3 @@ export default class RedisStore extends Store {
         return await this.redis.del(sid);
     }
 }
-// module.exports = RedisStore;
