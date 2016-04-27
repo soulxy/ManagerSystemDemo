@@ -20,3 +20,16 @@
 	2.安装mongodb插件也是坑：不会用mongodb、插件有bug 不能用shell，还得单独起mongod.exe服务
 
 	3.心好累  配置npm start 启动，明明我都没动 删了重写就可以用了 跟我闹啊啊啊啊
+
+
+##账号
+
+    admin： 10000000
+
+    teacher: 77240133
+
+    student: 11240134
+
+    compony: 12345678
+
+    密码统一123456

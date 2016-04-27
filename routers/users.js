@@ -18,14 +18,7 @@ router.post('/loginIn',async (ctx, next) => {
       };
       await next();
   }else if(result.password == ctx.request.body.password) {
-      //console.log('---------',ctx.session);
-      //ctx.session.id = result.id;
-      console.log('session is a',typeof ctx.session);
-
-      ctx.session.user = {id:result.id};
-
-      console.log(ctx.session.user);
-      //console.log('**********',ctx.session);
+      console.log('**********',ctx.session);
       ctx.body = {
           status: {
               code: 200,

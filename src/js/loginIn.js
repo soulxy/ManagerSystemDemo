@@ -50,7 +50,23 @@
                 $form.form('add prompt', 'password');
                 $form.form('add errors', ['密码错误']);
             } else if(response.status.code == 200) {
-                location.href = '/admin';
+                let nextPage;
+                switch (response.data.role) {
+                    case 0:
+                        nextPage = '/admin';
+                        break;
+                    case 1:
+                        nextPage = '/teacher';
+                        break;
+                    case 3:
+                        nextPage = '/compony';
+                        break;
+                    case 2:
+                    default:
+                        nextPage = '/student';
+                        break;
+                }
+                location.href = nextPage;
             }
         },
         onFailure: function(response) {

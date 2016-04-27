@@ -4,10 +4,45 @@
 extends ./layout
 
 block head
+    link(rel="stylesheet" href="/css/admin.css")
 
 block body
-    p this is admin
-    h1 #{user.id}
-    //-script.
-        var i = #{session}.length;
-        console.log('w',JSON.stringify(i));
+    <!-- Following Menu -->
+    .ui.large.top.fixed.hidden.menu
+        .ui.container
+            a.item 计算机与通信学院培训管理系统
+            .right.menu
+                .item
+                    div
+                        a.ui.basic.image.label
+                            img(src="/images/avatar/small/elliot.jpg" alt="管理员")
+                            | 设置
+    <!-- Page Contents -->
+    .adminer
+        .ui.container.panel
+            .ui.equal.width.stretched.grid
+                .column
+                    .ui.segment
+                        a(class="ui right pointing basic teal ribbon label") Operation
+                        | 计通学院
+                        p
+        .ui.container
+            .ui.special.cards
+                - each sysName, sysId in {1:'学生管理',2:'新闻管理',3:'留言信息管理',4:'实习指导教师管理',5:'实习基地管理'}
+                    .card
+                        .blurring.dimmable.image
+                            .ui.inverted.dimmer
+                                .content
+                                    .center
+                                        .ui.primary.button do it
+                            img(src="images/wireframe/image.png")
+                            //i.icon.sitemap
+                        .content
+                            a.header #{sysName}
+                            .meta
+                                span.date 对教师、学生、培训基地的操作管理
+                        .extra.content
+                            a
+                                i.users.icon
+                                | 2 Members
+    script(src="/js/admin.js")

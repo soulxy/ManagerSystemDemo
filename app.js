@@ -47,14 +47,7 @@ app.use(views(__dirname + '/views', {
   extension: 'jade'
 }));
 
-let sessionTry = session({store: new Store({})});
-console.warn('===>',sessionTry);
-app.use(session({store: new Store({})}));
-
-app.use(async (ctx, next) => {
-  console.log('** typeof session', typeof ctx.session);
-  await next();
-});
+app.use(session({store: new Store()}));
 
 app.use(async (ctx, next) => {
   const start = new Date;
