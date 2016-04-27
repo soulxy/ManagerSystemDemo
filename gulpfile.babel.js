@@ -1,5 +1,5 @@
 'use strict';
-
+// require("babel/register");
 import gulp from "gulp";
 // const gulp = require('gulp');
 /*
@@ -38,6 +38,8 @@ const minifyCss = require('gulp-minify-css');
 const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
+const mergeStream = require('merge-stream');
+const imageMin = require('gulp-imagemin');
 
 gulp.task('lessCompile',function () {
     log('编译 压缩less...');
@@ -48,7 +50,7 @@ gulp.task('lessCompile',function () {
         .on('error', function(e){
             log(e);
         })
-        .pipe(concat('app.min.css'))
+        // .pipe(concat('app.min.css'))
         .pipe(gulp.dest('./public/css'));
 });
 
@@ -64,7 +66,7 @@ gulp.task('jsMin',function () {
         .on('error', function(e){
             log(e);
         })
-        .pipe(concat('app.min.js'))
+        // .pipe(concat('app.min.js'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./public/js'));
 });
@@ -81,9 +83,11 @@ gulp.task('jadeTemplateCompile',function () {
 });
 
 gulp.task('watchCssJsJade',function(){
+    log('监听...');
+    gulp.watch(['./src/lib/*','./src/images/*'],['copy']);
     gulp.watch('./src/less/**/*.less',['lessCompile']);
-    gulp.watch('./src/js/!**!/!*.js',['jsMin']);
-    gulp.watch('./src/templates/!**/!*.jade',['jadeTemplateCompile']);
+    gulp.watch('./src/js/**/*.js',['jsMin']);
+    gulp.watch('./src/templates/**/*.jade',['jadeTemplateCompile']);
 });
 
 gulp.task('nodemon',function () {
@@ -100,17 +104,35 @@ gulp.task('nodemon',function () {
 });
 
 gulp.task('copy',function () {
-    log('复制...');
-    return gulp.src(['./src/lib/*'])
+    log('复制...');//'./src/lib/*', './src/images/*',
+    var libCopy = gulp.src(['./src/lib/**/*'])
         .pipe(gulp.dest('./public/lib'));
-        // .gulp.src('./src/images/*')
-        // .pipe(gulp.dest('./public/images'));
+    var imagesCopy = gulp.src(['./src/images/**/*'])
+        .pipe(imageMin({
+            optimizationLevel: 5, //类型：Number  默认：3  取值范围：0-7（优化等级）
+            progressive: true, //类型：Boolean 默认：false 无损压缩jpg图片
+            interlaced: true, //类型：Boolean 默认：false 隔行扫描gif进行渲染
+            multipass: true //类型：Boolean 默认：false 多次优化svg直到完全优化
+        }))
+        .pipe(gulp.dest('./public/images'));
+    return mergeStream(libCopy, imagesCopy);
 });
 
 gulp.task('clear',function (cb) {
     log('清除...');
     del(['./public/*'],cb);
 });
+/*gulp.task('min',function(){
+    var minCss = gulp.src('./src/lib/components/!*.css')
+        .pipe(minifyCss())
+        .pipe(concat('components.min.css'))
+        .pipe(gulp.dest('./public/lib'));
+    var minJs = gulp.src('./src/lib/components/!*.js')
+        .pipe(minify())
+        .pipe(concat('components.min.js'))
+        .pipe(gulp.dest('./public/lib'));
+    return mergeStream(minCss, minJs);
+});*/
 gulp.task('default',
     [
         'clear',
@@ -121,6 +143,7 @@ gulp.task('default',
         'watchCssJsJade'
         // 'nodemon'
     ]);
+
 /*
 * , function () {
  return gulp.src('./src')

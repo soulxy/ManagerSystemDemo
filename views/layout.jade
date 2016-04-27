@@ -2,11 +2,20 @@ doctype html
 html
   head
     title koa-demo
+    meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
     meta(name="viewport",content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1")
-    link(rel="stylesheet" type="text/css" class="ui" href="//oss.maxcdn.com/semantic-ui/2.1.8/components/component-name.min.css")
-
+    //- link(rel="stylesheet" type="text/css" class="ui" href="//oss.maxcdn.com/semantic-ui/2.1.8/components/component-name.min.css")
+    //link(rel="stylesheet" type="text/css" class="ui" href="/lib/components.min.css")
     link(rel="stylesheet", href="/lib/semantic.min.css")
-    script(type="javacscript" src="/lib/semantic.min.js")
+    link(rel="stylesheet", href="/lib/nprogress.css")
+
+    script(src="/lib/jquery.min.js")
+    script(src="/lib/semantic.min.js")
+    script(src="/lib/nprogress.js")
+    //script(src="/lib/components.min.js")
+    script(src="/js/routes.js")
+
+    block head
 
   body
     block body

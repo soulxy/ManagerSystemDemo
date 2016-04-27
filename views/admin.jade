@@ -1,0 +1,13 @@
+//
+   Created by Administrator on 2016/4/25.
+
+extends ./layout
+
+block head
+
+block body
+    p this is admin
+    h1 #{user.id}
+    //-script.
+        var i = #{session}.length;
+        console.log('w',JSON.stringify(i));

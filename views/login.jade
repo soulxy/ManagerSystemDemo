@@ -1,0 +1,36 @@
+extends ./layout
+block head
+    style.
+        body {
+          background-color: #DADADA;
+        }
+        body > .grid {
+          height: 100%;
+        }
+        .image {
+          margin-top: -100px;
+        }
+        .column {
+          max-width: 450px;
+        }
+block body
+    .ui.middle.aligned.center.aligned.grid
+        .column
+            .ui.teal.image.header
+                img.image(src="/images/logo.png")
+                .content Management System
+            form.ui.large.form
+                .ui.stacked.segment
+                    .field
+                        .ui.left.icon.input
+                            i.user.icon
+                            input(type="text" name="username" placeholder="用户名")
+                    .field
+                        .ui.left.icon.input
+                            i.lock.icon
+                            input(type="password" name="password" placeholder="密码")
+                    .ui.fluid.large.teal.submit.button Login In
+                .ui.error.message
+            .ui.message
+                | WELCOME HERE . DESIGNED BY XY
+    script(src="/js/loginIn.js")
