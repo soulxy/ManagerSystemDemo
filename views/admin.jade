@@ -16,7 +16,7 @@ block body
                     div
                         a.ui.basic.image.label
                             img(src="/images/avatar/small/elliot.jpg" alt="管理员")
-                            | 设置
+                            | 欢迎，管理员
     <!-- Page Contents -->
     .adminer
         .ui.container.panel
@@ -28,21 +28,37 @@ block body
                         p
         .ui.container
             .ui.special.cards
-                - each sysName, sysId in {1:'学生管理',2:'新闻管理',3:'留言信息管理',4:'实习指导教师管理',5:'实习基地管理'}
+                - var systemArr = [{'title':'实习指导教师管理','url':'/admin/teaManager'},{'title':'实习基地管理','url':'/admin/comManager'},{'title':'学生管理','url':'/admin/stuManager'},{'title':'新闻管理','url':'/admin/news'},{'title':'留言信息管理','url':'/admin/message'}];
+                - var describArr = ['实习指导教师管理','实习基地管理','学生管理','新闻管理','留言信息管理'];
+                - each obj,key in systemArr
                     .card
                         .blurring.dimmable.image
                             .ui.inverted.dimmer
                                 .content
                                     .center
-                                        .ui.primary.button do it
+                                        a.ui.primary.button(href=obj.url) do it
                             img(src="images/wireframe/image.png")
-                            //i.icon.sitemap
                         .content
-                            a.header #{sysName}
+                            a.header #{obj.title}
                             .meta
-                                span.date 对教师、学生、培训基地的操作管理
+                                span.date #{describArr[key]}
                         .extra.content
                             a
                                 i.users.icon
                                 | 2 Members
+                .card
+                    .blurring.dimmable.image
+                        .ui.inverted.dimmer
+                            .content
+                                .center
+                                    .ui.primary.button do it
+                        img(src="images/wireframe/image.png")
+                    .content
+                        a.header 设置
+                        .meta
+                            span.date 修改密码
+                    .extra.content
+                        a
+                            i.configure.icon
+                            | Will be better
     script(src="/js/admin.js")

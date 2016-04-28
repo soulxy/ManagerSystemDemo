@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./bin/www",
-    "koa": "./node_modules/.bin/runkoa bin/www",
-    "start": "./node_modules/.bin/nodemon bin/run",
+    "koa": "./node_modules/.bin/runkoa ./bin/run",
+    "start": "./node_modules/.bin/nodemon ./bin/run",
     "debug": "node debug ./bin/www"
   },
   "author": "",

@@ -73,6 +73,7 @@
             // request failed, or valid response but response.success = false
             console.log('onFailure...',response);
             NProgress.done();
+            $form.form('add errors', [response]);
         },
         onError: function(errorMessage) {
             // invalid response

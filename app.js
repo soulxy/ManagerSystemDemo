@@ -3,9 +3,9 @@
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-stage-3": "^6.5.0",
 */
-
+'use strict';
 const Koa = require('koa');
-const app = new Koa();
+let app = new Koa();
 
 import views from "koa-views";
 import bodyParser from "koa-bodyparser";
@@ -24,18 +24,7 @@ import Store from "./Store.js";
 
 app.use(bodyParser());
 
-/*app.use(async (ctx, next) => {
-  session({
-    store: new Store({
-      port: 6379,          // Redis port
-      host: '127.0.0.1',   // Redis host
-      // family: 4,           // 4 (IPv4) or 6 (IPv6)
-      // password: '',
-      db: 0
-    })
-  });
-  await next();
-});*/
+app.use(session({store: new Store()}));
 
 app.use(convert(json()));
 
@@ -47,41 +36,35 @@ app.use(views(__dirname + '/views', {
   extension: 'jade'
 }));
 
-app.use(session({store: new Store()}));
-
 app.use(async (ctx, next) => {
+  console.log('---session---',ctx.session.userObj);
   const start = new Date;
   await next();
   const ms = new Date - start;
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
 
+/*app.use(async (ctx, next) => {
+  console.log('--->',ctx.session);
+  //验证是否登录，没登录跳转到登录页并验证是否有权限访问
+  //TODO
+  if(!ctx.session || !ctx.session.userObj) {//未登录
+    await ctx.render('/login');
+  }
+  await next();
+});*/
 //连接数据库
-/*app.use(mongodb({
-  host: 'localhost',
-  port: 27017,
-  user: '',
-  pass: '',
-  db: 'koaMDB',
-  max: 100,
-  min: 1,
-  timeout: 30000,
-  log: false
-}));*/
 let db = monk('localhost:27017/koaMDB');
 app.use(async (ctx, next) => {
   ctx.request.db = db;
   await next();
 });
 
-router.use('/', index.routes(), index.allowedMethods());
+router.use('', index.routes(), index.allowedMethods());
 router.use('/users', users.routes(), users.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 
-// app.on('error', function(err, ctx){
-//   console.log(err);
-//   log.error('server error', err, ctx);
-// });
+
 
 module.exports = app;

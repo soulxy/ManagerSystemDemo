@@ -8,7 +8,17 @@ export default class RedisStore extends Store {
     }
 
     async get(sid) {
-        return await this.redis.get(`SESSION:${sid}`);
+        // return await (this.redis.get(`SESSION:${sid}`));
+        try{
+            let oRedis = await (this.redis.get(`SESSION:${sid}`));
+            return JSON.parse(oRedis);
+        }catch(e){
+            return {
+                errro:e
+            };
+        }
+
+
     }
 
     async set(session, opts) {
