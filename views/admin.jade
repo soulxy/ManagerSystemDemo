@@ -4,20 +4,12 @@
 extends ./layout
 
 block head
+    link(rel="stylesheet" href='/css/top.css')
     link(rel="stylesheet" href="/css/admin.css")
 
 block body
-    <!-- Following Menu -->
-    .ui.large.top.fixed.hidden.menu
-        .ui.container
-            a.item 计算机与通信学院培训管理系统
-            .right.menu
-                .item
-                    div
-                        a.ui.basic.image.label
-                            img(src="/images/avatar/small/elliot.jpg" alt="管理员")
-                            | 欢迎，管理员
-    <!-- Page Contents -->
+    include ./top
+    //- Page Contents
     .adminer
         .ui.container.panel
             .ui.equal.width.stretched.grid
@@ -28,7 +20,7 @@ block body
                         p
         .ui.container
             .ui.special.cards
-                - var systemArr = [{'title':'实习指导教师管理','url':'/admin/teaManager'},{'title':'实习基地管理','url':'/admin/comManager'},{'title':'学生管理','url':'/admin/stuManager'},{'title':'新闻管理','url':'/admin/news'},{'title':'留言信息管理','url':'/admin/message'}];
+                - var systemArr = [{'title':'实习指导教师管理','url':'/admin/teacher'},{'title':'实习基地管理','url':'/admin/compony'},{'title':'学生管理','url':'/admin/student'},{'title':'新闻管理','url':'/admin/news'},{'title':'留言信息管理','url':'/admin/message'}];
                 - var describArr = ['实习指导教师管理','实习基地管理','学生管理','新闻管理','留言信息管理'];
                 - each obj,key in systemArr
                     .card
@@ -54,7 +46,7 @@ block body
                                     .ui.primary.button do it
                         img(src="images/wireframe/image.png")
                     .content
-                        a.header 设置
+                        a.header(href="/admin/setting") 设置
                         .meta
                             span.date 修改密码
                     .extra.content

@@ -41,7 +41,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const mergeStream = require('merge-stream');
 const imageMin = require('gulp-imagemin');
 
-gulp.task('lessCompile',function () {
+gulp.task('lessCompile', function () {
     log('编译 压缩less...');
     return gulp.src('./src/less/**/*.less')
         .pipe(less())
@@ -54,7 +54,7 @@ gulp.task('lessCompile',function () {
         .pipe(gulp.dest('./public/css'));
 });
 
-gulp.task('jsMin',function () {
+gulp.task('jsMin', function () {
     log('编译es6 压缩js...');
     return gulp.src('./src/js/**/*.js')
         .pipe(sourcemaps.init())
@@ -71,7 +71,7 @@ gulp.task('jsMin',function () {
         .pipe(gulp.dest('./public/js'));
 });
 
-gulp.task('jadeTemplateCompile',function () {
+gulp.task('jadeTemplateCompile', function () {
     log('编译template jade...');
     return gulp.src('./src/templates/**/*.jade')
         .pipe(jade({pretty: true}))
@@ -82,7 +82,7 @@ gulp.task('jadeTemplateCompile',function () {
         .pipe(gulp.dest('./public/templates'));
 });
 
-gulp.task('watchCssJsJade',function(){
+gulp.task('watchCssJsJade', function(){
     log('监听...');
     gulp.watch(['./src/lib/*','./src/images/*'],['copy']);
     gulp.watch('./src/less/**/*.less',['lessCompile']);
@@ -103,7 +103,7 @@ gulp.task('nodemon',function () {
         })
 });
 
-gulp.task('copy',function () {
+gulp.task('copy', function () {
     log('复制...');//'./src/lib/*', './src/images/*',
     var libCopy = gulp.src(['./src/lib/**/*'])
         .pipe(gulp.dest('./public/lib'));
@@ -118,40 +118,17 @@ gulp.task('copy',function () {
     return mergeStream(libCopy, imagesCopy);
 });
 
-gulp.task('clear',function (cb) {
+gulp.task('clean',function (cb) {
     log('清除...');
-    del(['./public/*'],cb);
+    del(['./public'],cb);
 });
-/*gulp.task('min',function(){
-    var minCss = gulp.src('./src/lib/components/!*.css')
-        .pipe(minifyCss())
-        .pipe(concat('components.min.css'))
-        .pipe(gulp.dest('./public/lib'));
-    var minJs = gulp.src('./src/lib/components/!*.js')
-        .pipe(minify())
-        .pipe(concat('components.min.js'))
-        .pipe(gulp.dest('./public/lib'));
-    return mergeStream(minCss, minJs);
-});*/
+
 gulp.task('default',
     [
-        'clear',
+        'clean',
         'lessCompile',
         'jsMin',
         'jadeTemplateCompile',
         'copy',
         'watchCssJsJade'
-        // 'nodemon'
     ]);
-
-/*
-* , function () {
- return gulp.src('./src')
- // `changed` 任务需要提前知道目标目录位置
- // 才能找出哪些文件是被修改过的
- .pipe(changed('./public'))
- // 只有被更改过的文件才会通过这里
- .pipe(jscs())
- .pipe(uglify())
- .pipe(gulp.dest('./public'));
- }*/

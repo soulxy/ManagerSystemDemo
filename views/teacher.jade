@@ -1,0 +1,57 @@
+//-Created by Administrator on 2016/4/29.
+extends ./layout
+block head
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+block body
+    include ./top
+    .teacher.list
+        .ui.container.contents
+        - var res = results,flage = false;
+        - if (res && res.status && res.status.code == 500) flage = true;
+        - else
+            table.ui.celled.table.teal
+                thea
+                    tr
+                        th 工号
+                        th 姓名
+                        th 性别
+                        th 职务
+                        th 带队基地
+                tbody
+                    - each group in res.data
+                        tr
+                            td
+                                .ui.ribbon.label
+                                    .ui.dropdown.inline
+                                        .text #{group.id}
+                                        i.dropdown.icon
+                                        .menu
+                                            a.item(href="/admin/teacher/update/"+group.id) 修改
+                                            a.item.delete(data-href="/admin/teacher/delete/"+group.id) 删除
+                            td #{group.name}
+                            td #{group.gender == 'male' ? '男' : '女'}
+                            case group.profession
+                                when '1': td 讲师
+                                when '2': td 副教授
+                                when '3': td 教授
+                                when '4': td 院长
+                            td #{group.cname}
+
+                tfoot.full-width
+                    tr
+                        th(colspan="3")
+                            .ui.left.floated.pagination.menu
+                                a.icon.item
+                                    i.left.chevron.icon
+                                a.item 1
+                                a.icon.item
+                                    i.right.chevron.icon
+                        th(colspan="2")
+                            a.ui.right.floated.small.primary.labeled.icon.button(href="/admin/teacher/add")
+                                i.user.icon
+                                | Add
+    include ./modal
+    script.
+        window.flage = !{flage};
+    script(src="/js/teacher.js")

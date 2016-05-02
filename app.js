@@ -18,6 +18,9 @@ import onerror from "koa-onerror";
 const router = require('koa-router')();
 const index = require('./routers/index');
 const users = require('./routers/users');
+const admin = require('./routers/admin');
+const company = require('./routers/company');
+
 import monk from "monk";
 import session from "koa-session2";
 import Store from "./Store.js";
@@ -37,7 +40,6 @@ app.use(views(__dirname + '/views', {
 }));
 
 app.use(async (ctx, next) => {
-  console.log('---session---',ctx.session.userObj);
   const start = new Date;
   await next();
   const ms = new Date - start;
@@ -62,6 +64,8 @@ app.use(async (ctx, next) => {
 
 router.use('', index.routes(), index.allowedMethods());
 router.use('/users', users.routes(), users.allowedMethods());
+router.use('/admin', admin.routes(), admin.allowedMethods());
+router.use('/company', company.routes(), company.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 

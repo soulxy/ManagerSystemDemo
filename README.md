@@ -28,13 +28,13 @@
 
 ### 账号
 
-    admin： 10000000
+    admin： 10000000 role:0
 
-    teacher: 77240133
+    teacher: 77240133 role:1
 
-    student: 11240134
+    student: 11240134 role:2
 
-    compony: 12345678
+    compony: 12345678 role:3
 
     密码统一123456
 

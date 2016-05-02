@@ -8,7 +8,6 @@ router.post('/loginIn',async (ctx, next) => {
   // let result = await ctx.mongo.db('koaMDB').collection('user').findOne({sid: ctx.request.body.username});
   try {
       let result = await ctx.request.db.get('user').findOne({id: ctx.request.body.username});
-      console.log('result==>',result);
       if(!result) {
           ctx.body = {
               status: {
