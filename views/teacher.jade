@@ -8,10 +8,11 @@ block body
     .teacher.list
         .ui.container.contents
         - var res = results,flage = false;
-        - if (res && res.status && res.status.code == 500) flage = true;
+        - if (res && res.status && res.status.code == 500)
+            p #{res.status.msg}
         - else
             table.ui.celled.table.teal
-                thea
+                thead
                     tr
                         th 工号
                         th 姓名
@@ -28,7 +29,7 @@ block body
                                         i.dropdown.icon
                                         .menu
                                             a.item(href="/admin/teacher/update/"+group.id) 修改
-                                            a.item.delete(data-href="/admin/teacher/delete/"+group.id) 删除
+                                            a.item.delete(data-id=group.id data-href="/admin/teacher/delete/"+group.id) 删除
                             td #{group.name}
                             td #{group.gender == 'male' ? '男' : '女'}
                             case group.profession

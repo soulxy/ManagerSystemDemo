@@ -24,7 +24,7 @@ router.get('/teacher', async (ctx, next) => {
         _.forEach(teachersList, function(item, key){
             item.cname = companyArr[item.cid];
         });
-        console.log('===>',teachersList);
+
         result = {
             status: { code: 200, msg: '查找成功' }, data:teachersList
         };
