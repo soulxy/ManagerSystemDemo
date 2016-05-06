@@ -20,6 +20,7 @@ const index = require('./routers/index');
 const users = require('./routers/users');
 const admin = require('./routers/admin');
 const company = require('./routers/company');
+const teacher = require('./routers/teacher');
 
 import monk from "monk";
 import session from "koa-session2";
@@ -66,6 +67,7 @@ router.use('', index.routes(), index.allowedMethods());
 router.use('/users', users.routes(), users.allowedMethods());
 router.use('/admin', admin.routes(), admin.allowedMethods());
 router.use('/company', company.routes(), company.allowedMethods());
+router.use('/teacher', teacher.routes(), teacher.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 

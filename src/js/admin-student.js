@@ -1,18 +1,19 @@
 /**
- * Created by Administrator on 2016/4/29.
+ * Created by Administrator on 2016/5/5.
  */
+
 
 ;
 (function(){
 
     //下拉菜单
     $('.ui.dropdown')
-        /*.dropdown({
-            action: 'hide',
-            onChange: function(value, text, $selectedItem) {
-                console.log('-->',value,text,$selectedItem);
-            }
-        })*/
+    /*.dropdown({
+     action: 'hide',
+     onChange: function(value, text, $selectedItem) {
+     console.log('-->',value,text,$selectedItem);
+     }
+     })*/
         .dropdown('get value')
     ;
 
@@ -22,7 +23,7 @@
     ;
 
     //获取公司列表
-    $('.ui.dropdown.company')
+    $('.ui.dropdown.s-company')
         .dropdown({
             apiSettings: {
                 action: 'get company list',
@@ -48,6 +49,33 @@
         })
     ;
 
+    //获取老师列表
+    $('.ui.dropdown.s-teacher')
+        .dropdown({
+            apiSettings: {
+                action: 'get teacher list',
+                method:'get',
+                onResponse: function (respone) {
+                    let teachers = {};
+                    if(respone && respone.status && respone.status.code == 200) {
+                        teachers.success = true;
+                        teachers.results = [];
+                        for(let item of respone.data) {
+                            teachers.results.push({
+                                name: item.name,
+                                value: item.id
+                            });
+                        }
+                    }else {
+                        teachers.success = false;
+                    }
+                    return teachers;
+                }
+            },
+            maxSelections: 1
+        })
+    ;
+
     //表单验证
     let $btn = $('.ui.button.primary');
     let $form = $('.ui.form');
@@ -55,33 +83,33 @@
         id: {
             identifier: 'id',
             rules: [{
-                    type   : 'empty',
-                    prompt : '请输入教师工号'
+                type   : 'empty',
+                prompt : '请输入学生学号'
             }, {
-                    type   : 'number',
-                    prompt : '请输入合理工号，用户名为纯数字'
-                }]
+                type   : 'number',
+                prompt : '请输入合理学号，用户名为纯数字'
+            }]
         },
         name: {
             identifier: 'name',
             rules: [{
-                    type   : 'empty',
-                    prompt : '请输入教师名字'
-                }]
+                type   : 'empty',
+                prompt : '请输入学生名字'
+            }]
         },
         gender: {
             identifier: 'gender',
             rules: [{
-                    type   : 'empty',
-                    prompt : '请选择性别'
-                }]
+                type   : 'empty',
+                prompt : '请选择性别'
+            }]
         },
         profession: {
             identifier: 'profession',
             rules: [{
-                    type   : 'empty',
-                    prompt : '请选择职务'
-                }]
+                type   : 'empty',
+                prompt : '请选择专业'
+            }]
         }
     };
 
@@ -95,6 +123,7 @@
                 gender: resultObj.data.gender,
                 profession: resultObj.data.profession,
                 company: resultObj.data.cid,
+                teacher: resultObj.data.tid,
                 status: resultObj.data.status ? true :false
             };
             $form.form('set values', temp);
@@ -107,24 +136,26 @@
     }
 
     let addApiAJAX = {
-        action: 'add teacher',
+        action: 'add student',
         method: 'POST',
         beforeSend: function (settings) {
             console.log('beforeSend');
             NProgress.start();
             settings.data = $form.form('get values',['id','name','gender','profession']);
             settings.data.cid = $form.form('get values', ['company']).company;
+            settings.data.tid = $form.form('get values', ['teacher']).teacher;
             settings.data.status = $form.form('get values', ['status']).status ? 1 : 0;
             return settings;
         },
         onSuccess: function (response) {
             NProgress.done();
             console.log('--->1',response);
-            location.href = '/admin/teacher';
+            location.href = '/admin/student';
         },
         onFailure: function (response) {
             NProgress.done();
             console.log('===>2',response);
+            errorModel();
         },
         onError: function (errorMessage) {
             NProgress.done();
@@ -145,13 +176,14 @@
             NProgress.start();
             settings.data = $form.form('get values',['id','name','gender','profession']);
             settings.data.cid = $form.form('get values', ['company']).company;
+            settings.data.tid = $form.form('get values', ['teacher']).teacher;
             settings.data.status = $form.form('get values', ['status']).status ? 1 : 0;
             return settings;
         },
         onSuccess: function (response) {
             NProgress.done();
             console.log('--->1',response);
-            location.href = '/admin/teacher';
+            location.href = '/admin/student';
         },
         onFailure: function (response) {
             NProgress.done();

@@ -1,0 +1,64 @@
+//-Created by Administrator on 2016/5/5.
+
+extends ./layout
+block head
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+block body
+    include ./top
+    .student.list
+        .ui.container.contents
+        - var res = results,flage = false;
+        - if (res && res.status && res.status.code == 500 && (flage = true))
+            //-p #{res.status.msg}
+        - else
+            table.ui.celled.table.teal
+                thead
+                    tr
+                        th 工号
+                        th 姓名
+                        th 性别
+                        th 专业
+                        th 指导老师
+                        th 培训基地
+                tbody
+                - each group in res.data.student
+                    tr
+                        td
+                            .ui.ribbon.label
+                                .ui.dropdown.inline
+                                    .text #{group.id}
+                                    i.dropdown.icon
+                                    .menu
+                                        a.item(href="/admin/student/update/"+group.id) 修改
+                                        .item.delete(data-id=group.id) 删除
+                        td #{group.name}
+                        td #{group.gender == 'male' ? '男' : '女'}
+                        case group.profession
+                            when '1': td 计算机科学与技术
+                            when '2': td 信息工程
+                            when '3': td 通信工程
+                        td #{group.tname}
+                        td #{group.cname}
+                tfoot.full-width
+                    tr
+                        th(colspan="4")
+                            .ui.left.floated.pagination.menu
+                                - var currentPage = res.data.pageObj.currentPage*1, countPage = res.data.pageObj.countPage*1
+                                - var previous =  currentPage>1 ? (currentPage - 1) : null;
+                                - var next = countPage > currentPage ? (currentPage + 1) : null;
+                                a.icon.item(href="/admin/student?page=" + previous class=previous?'':'disabled')
+                                    i.left.chevron.icon
+                                - var n = 1;
+                                - while (n <= countPage)
+                                    a.item(href="/admin/student?page=" + n class=currentPage == n ? 'active':'') #{n++}
+                                a.icon.item(href="/admin/student?page=" + next class=next?'':'disabled')
+                                    i.right.chevron.icon
+                        th(colspan="2")
+                            a.ui.right.floated.small.primary.labeled.icon.button(href="/admin/student/add")
+                                i.user.icon
+                                | Add
+    include ./modal
+    script.
+        window.flage = !{flage};
+    script(src="/js/student.js")

@@ -1,0 +1,43 @@
+//-Created by Administrator on 2016/5/6.
+
+extends ./layout
+block head
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+block body
+    include ./top
+    - var res = result ? JSON.stringify(result) : 0
+    .teacher.add.update
+        .ui.container
+            .ui.piled.segment
+                h4.ui.header
+                    .ui.breadcrumb
+                        a.section(href="/admin") 首页
+                        i.right.angle.icon.divider
+                        a.section(href="/admin/company") 实习基地管理
+                        i.right.angle.icon.divider
+                        - if(result && result.status && result.status.code == 200)
+                            .active.section 修改
+                        - else
+                            .active.section 添加
+                form.ui.form
+                    .field.required
+                        label 公司号
+                        input(type="text" name="id" placeholder="登录公司号")
+                    .field.required
+                        label 公司名称
+                        input(type="text" name="name" placeholder="公司名称")
+                    .field.required
+                        label 公司地址
+                        input(type="text" name="address" placeholder="公司地址")
+                    .ui.segment.required
+                        .field
+                            .ui.toggle.checkbox
+                                input(type="checkbox" tabindex="0" class="hidden" name="status" value="")
+                                label 公司状态可用
+                    .ui.error.message
+                    button.ui.button.primary.submit 提交
+    include ./modal
+    script.
+        window.res = !{res};
+    script(src='/js/admin-company.js')

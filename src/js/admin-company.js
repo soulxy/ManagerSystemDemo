@@ -1,52 +1,17 @@
 /**
- * Created by Administrator on 2016/4/29.
+ * Created by Administrator on 2016/5/6.
  */
 
 ;
 (function(){
 
-    //下拉菜单
-    $('.ui.dropdown')
-        /*.dropdown({
-            action: 'hide',
-            onChange: function(value, text, $selectedItem) {
-                console.log('-->',value,text,$selectedItem);
-            }
-        })*/
-        .dropdown('get value')
-    ;
 
     //复选框
     $('.ui.checkbox')
         .checkbox()
     ;
 
-    //获取公司列表
-    $('.ui.dropdown.company')
-        .dropdown({
-            apiSettings: {
-                action: 'get company list',
-                method:'get',
-                onResponse: function (respone) {
-                    let companies = {};
-                    if(respone && respone.status && respone.status.code == 200) {
-                        companies.success = true;
-                        companies.results = [];
-                        for(let item of respone.data) {
-                            companies.results.push({
-                                name: item.name,
-                                value: item.id
-                            });
-                        }
-                    }else {
-                        companies.success = false;
-                    }
-                    return companies;
-                }
-            },
-            maxSelections: 1
-        })
-    ;
+
 
     //表单验证
     let $btn = $('.ui.button.primary');
@@ -55,33 +20,26 @@
         id: {
             identifier: 'id',
             rules: [{
-                    type   : 'empty',
-                    prompt : '请输入教师工号'
+                type   : 'empty',
+                prompt : '请输入公司登陆号'
             }, {
-                    type   : 'number',
-                    prompt : '请输入合理工号，用户名为纯数字'
-                }]
+                type   : 'number',
+                prompt : '请输入合理登陆号，用户名为纯数字'
+            }]
         },
         name: {
             identifier: 'name',
             rules: [{
-                    type   : 'empty',
-                    prompt : '请输入教师名字'
-                }]
+                type   : 'empty',
+                prompt : '请输入公司名字'
+            }]
         },
-        gender: {
-            identifier: 'gender',
+        address: {
+            identifier: 'address',
             rules: [{
-                    type   : 'empty',
-                    prompt : '请选择性别'
-                }]
-        },
-        profession: {
-            identifier: 'profession',
-            rules: [{
-                    type   : 'empty',
-                    prompt : '请选择职务'
-                }]
+                type   : 'empty',
+                prompt : '请输入公司地址'
+            }]
         }
     };
 
@@ -92,9 +50,7 @@
             temp = {
                 id: resultObj.data.id,
                 name: resultObj.data.name,
-                gender: resultObj.data.gender,
-                profession: resultObj.data.profession,
-                company: resultObj.data.cid,
+                address: resultObj.data.address,
                 status: resultObj.data.status ? true :false
             };
             $form.form('set values', temp);
@@ -107,20 +63,19 @@
     }
 
     let addApiAJAX = {
-        action: 'add teacher',
+        action: 'add company',
         method: 'POST',
         beforeSend: function (settings) {
             console.log('beforeSend');
             NProgress.start();
-            settings.data = $form.form('get values',['id','name','gender','profession']);
-            settings.data.cid = $form.form('get values', ['company']).company;
+            settings.data = $form.form('get values',['id','name','address']);
             settings.data.status = $form.form('get values', ['status']).status ? 1 : 0;
             return settings;
         },
         onSuccess: function (response) {
             NProgress.done();
             console.log('--->1',response);
-            location.href = '/admin/teacher';
+            location.href = '/admin/company';
         },
         onFailure: function (response) {
             NProgress.done();
@@ -137,21 +92,20 @@
     };
 
     let updateAJAX = {
-        action: 'update teacher',
+        action: 'update company',
         method: 'PUT',
         urlData: { id: resultObj ? resultObj.data.id : 0 },
         beforeSend: function (settings) {
             console.log('beforeSend');
             NProgress.start();
-            settings.data = $form.form('get values',['id','name','gender','profession']);
-            settings.data.cid = $form.form('get values', ['company']).company;
+            settings.data = $form.form('get values',['id','name','address']);
             settings.data.status = $form.form('get values', ['status']).status ? 1 : 0;
             return settings;
         },
         onSuccess: function (response) {
             NProgress.done();
             console.log('--->1',response);
-            location.href = '/admin/teacher';
+            location.href = '/admin/company';
         },
         onFailure: function (response) {
             NProgress.done();

@@ -1,4 +1,5 @@
-//-Created by Administrator on 2016/4/29.
+//-Created by Administrator on 2016/5/5.
+
 extends ./layout
 block head
     link(href='/css/top.css' rel="stylesheet")
@@ -13,7 +14,7 @@ block body
                     .ui.breadcrumb
                         a.section(href="/admin") 首页
                         i.right.angle.icon.divider
-                        a.section(href="/admin/teacher") 教师管理
+                        a.section(href="/admin/student") 学生管理
                         i.right.angle.icon.divider
                         - if(result && result.status && result.status.code == 200)
                             .active.section 修改
@@ -33,29 +34,36 @@ block body
                             option(value="male") 男
                             option(value="female") 女
                     .field.required
-                        label 职务
+                        label 专业
                         select.ui.dropdown(name="profession")
-                            option(value="")  职务
-                            option(value="1") 讲师
-                            option(value="2") 副教授
-                            option(value="3") 教授
-                            option(value="4") 院长
+                            option(value="")  专业
+                            option(value="1") 计算机科学与技术
+                            option(value="2") 信息工程
+                            option(value="3") 通信工程
                     .field
-                        label 带队公司
-                        .ui.multiple.search.selection.dropdown.company
+                        label 指导老师
+                        .ui.multiple.search.selection.dropdown.s-teacher
+                            input(type="hidden" name="teacher")
+                            i.dropdown.icon
+                            input(type="text" class="search" tabindex="0" )
+                            .default.text 代课老师（不可随意添加修改）
+                            .menu(tabindex="-1")
+                    .field
+                        label 培训基地
+                        .ui.multiple.search.selection.dropdown.s-company
                             input(type="hidden" name="company")
                             i.dropdown.icon
                             input(type="text" class="search" tabindex="0" )
-                            .default.text 公司名
+                            .default.text 培训基地（不可随意添加修改）
                             .menu(tabindex="-1")
                     .ui.segment.required
                         .field
                             .ui.toggle.checkbox
                                 input(type="checkbox" tabindex="0" class="hidden" name="status" value="")
-                                label 教师状态可用
+                                label 学生状态可用
                     .ui.error.message
                     button.ui.button.primary.submit 提交
     include ./modal
     script.
         window.res = !{res};
-    script(src='/js/admin-teacher.js')
+    script(src='/js/admin-student.js')

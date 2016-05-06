@@ -1,5 +1,5 @@
 /**
- * Created by Administrator on 2016/5/2.
+ * Created by Administrator on 2016/5/6.
  */
 
 ;(
@@ -18,7 +18,7 @@
             let $this = $(e.target);
             let deleteAJAX = {
                 method: 'delete',
-                action: 'delete teacher',
+                action: 'delete company',
                 urlData: { id: $this.data('id') },
                 beforeSend: function (settings) {
                     console.log('beforeSend',$this.data('id'),settings);
@@ -60,7 +60,7 @@
                         $.ajax({
                             type: 'DELETE',
                             dataType: 'json',
-                            url: '/admin/teacher/deleteTea/'+$this.data('id'),
+                            url: '/admin/company/deleteCom/'+$this.data('id'),
                             beforeSend: function() {
                                 console.log('beforeSend');
                                 NProgress.start();
