@@ -51,7 +51,7 @@
                 id: resultObj.data.id,
                 name: resultObj.data.name,
                 address: resultObj.data.address,
-                status: resultObj.data.status ? true :false
+                status: resultObj.data.status==1 ? true :false
             };
             $form.form('set values', temp);
         }else if(resultObj.status.code == 500) {

@@ -124,7 +124,7 @@
                 profession: resultObj.data.profession,
                 company: resultObj.data.cid,
                 teacher: resultObj.data.tid,
-                status: resultObj.data.status ? true :false
+                status: resultObj.data.status==1 ? true :false
             };
             $form.form('set values', temp);
         }else if(resultObj.status.code == 500) {

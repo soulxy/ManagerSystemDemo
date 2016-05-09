@@ -5,10 +5,13 @@
  * 老师管理：增删改查
  * 学生管理：增删改查
  * 公司管理：增删改查
+ * 新闻管理：增删改查
+ * 留言管理：删查
  */
 
 let router = require('koa-router')();
 let _ = require('lodash');
+let format = require('date-format');
 
 let errorFun = function(msg){
     throw new Error(msg);
@@ -431,6 +434,175 @@ router.del('/company/deleteCom/:id', async (ctx, next) => {
     try {
         await ctx.request.db.get('company').remove({ id: cid});
         await ctx.request.db.get('user').remove({ id: cid});
+        result = {
+            status: { code: 200, msg: '删除成功'}
+        };
+    }catch(e) {
+        result = {
+            status: { code: 500, msg: e || '服务器错误' }
+        };
+    }finally {
+        ctx.body = result;
+    }
+});
+
+//查看新闻（分页）
+router.get('/news', async (ctx, next) => {
+    let result;
+    let params = {}, pageObj = {};
+    params.page = ctx.request.query.page || 1;
+    params.pageSize = ctx.request.pageSize || 2;
+
+    try {
+        let newsList = await ctx.request.db.get('news').find({},{ limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
+        let count = await ctx.request.db.get('news').count();
+
+        pageObj.countPage = Math.ceil(count / params.pageSize);
+        pageObj.currentPage = params.page;
+        result = {
+            status: { code: 200, msg: '查找成功' }, data:{ news: newsList, pageObj: pageObj}
+        };
+    }catch(e) {
+        result = {
+            status: { code: 500, msg: e || '服务器错误' }
+        };
+    }finally {
+        await ctx.render('news', { results: result});
+    }
+});
+
+//展示添加 修改新闻页面
+router.get('/news/add', async (ctx, next) => {
+    await ctx.render('news-add-update');
+});
+
+router.get('/news/update/:id', async (ctx, next) => {
+    let nid = ctx.params.id;
+    let result;
+    try {
+        let news = await ctx.request.db.get('news').findById(nid);
+        if(!news) {
+            result = {
+                status: {code: 400, msg: '空'}
+            };
+        }else{
+            result = {
+                status: { code: 200, msg: '查询成功'}, data: news
+            };
+        }
+    }catch(e){
+        result = {
+            status: { code: 500, msg: e || '服务器错误'}
+        };
+    } finally {
+        await ctx.render('news-add-update', { result: result});
+    }
+
+});
+
+//添加新闻
+router.post('/news/addNews', async (ctx, next) => {
+    let newsObj = ctx.request.body;
+    newsObj.datetime = format.asString(new Date());
+    let result;
+    try {
+        if(!newsObj) {
+            console.log('空了');
+            errorFun('输入为空');
+        }
+        let news = await ctx.request.db.get('news').insert(newsObj);
+        result = {
+            status: { code: 200, msg: '添加成功' }
+        };
+    }catch(e) {
+        result = {
+            status: { code: 500, msg: e || '服务器错误' }
+        };
+    }finally {
+        ctx.body = result;
+    }
+});
+
+//修改新闻
+router.put('/news/updateNews/:id', async (ctx, next) => {
+    let nid = ctx.params.id;
+    let newsObj = ctx.request.body;
+    let result;
+    try {
+        if(!newsObj) {
+            console.log('空了');
+            errorFun('输入为空');
+        }
+        let news = await ctx.request.db.get('news').findById(nid);
+        if(!news) {
+            result = {
+                status: { code: 400, msg: '找不到'}
+            };
+        }else {console.log('===============>',newsObj);
+            await ctx.request.db.get('news').update({id: cid},{$set: newsObj});
+            result = {
+                status: { code: 200, msg: '修改成功' }
+            };
+        }
+    }catch(e) {
+        result = {
+            status: { code: 500, msg: e || '服务器错误' }
+        };
+    }finally {
+        ctx.body = result;
+    }
+});
+
+
+//删除新闻
+router.del('/news/deleteNews/:id', async (ctx, next) => {
+    let nid = ctx.params.id;
+    let result;
+    try {
+        await ctx.request.db.get('news').remove({ _id: nid});
+        result = {
+            status: { code: 200, msg: '删除成功'}
+        };
+    }catch(e) {
+        result = {
+            status: { code: 500, msg: e || '服务器错误' }
+        };
+    }finally {
+        ctx.body = result;
+    }
+});
+
+//查看留言（分页）
+router.get('/message', async (ctx, next) => {
+    let result;
+    let params = {}, pageObj = {};
+    params.page = ctx.request.query.page || 1;
+    params.pageSize = ctx.request.pageSize || 2;
+
+    try {
+        let newsList = await ctx.request.db.get('message').find({},{ limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
+        let count = await ctx.request.db.get('message').count();
+
+        pageObj.countPage = Math.ceil(count / params.pageSize);
+        pageObj.currentPage = params.page;
+        result = {
+            status: { code: 200, msg: '查找成功' }, data:{ message: messageList, pageObj: pageObj}
+        };
+    }catch(e) {
+        result = {
+            status: { code: 500, msg: e || '服务器错误' }
+        };
+    }finally {
+        await ctx.render('message', { results: result});
+    }
+});
+
+//删除留言
+router.del('/message/deleteMsg/:id', async (ctx, next) => {
+    let mid = ctx.params.id;
+    let result;
+    try {
+        await ctx.request.db.get('news').remove({ _id: mid});
         result = {
             status: { code: 200, msg: '删除成功'}
         };
