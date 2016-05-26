@@ -1,0 +1,80 @@
+//-Created by Administrator on 2016/5/25.
+
+extends ../layout
+
+block head
+    link(rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css')
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+    link(href='/css/student-all.css' rel='stylesheet')
+block body
+    include ./top
+    .student.all.right
+        - var res = result
+        if res && res.status && res.status.code == 500
+            p 哦噢，出错了QAQ
+        else if res.status.code == 200
+            .ui.container.panel
+                .ui.equal.width.stretched.grid
+                    .column
+                        .ui.segment
+                            a(class="ui right pointing basic teal ribbon label") Operation
+                            | #{res.data.student.name}
+            .ui.container.display
+                h4.ui.horizontal.divider.header
+                    i.announcement.icon
+                    | 新闻
+                - each group in res.data.news
+                    .column
+                        .ui.raised.segment
+                            a.ui.orange.ribbon.label #{group.datetime.substring(0,19)}
+                            span #{group.title}
+                            p #{group.content}
+                h4.ui.horizontal.divider.header
+                    i.tag.icon
+                    | 学校指导老师
+                p #{res.data.teacher && res.data.teacher.name || '空'}
+                h4.ui.horizontal.divider.header
+                    i.bar.chart.icon
+                    | 培训项目
+                table.ui.definition.table
+                    tr
+                        td.two.wide.column 培训机构
+                        td.company #{res.data.company && res.data.company.name || '空'}
+                    tr
+                        td 标题
+                        td.title #{res.data.mission && res.data.mission.title || '空'}
+                    tr
+                        td  内容
+                        td.content #{res.data.mission && res.data.mission.content || '空'}
+                    tr
+                        td  时间
+                        td.time #{res.data.mission && res.data.mission.time || '空'}
+            .ui.container.operation
+                .ui.three.item.labeled.icon.menu
+                    a.red.item.active(href="/student/course")
+                        i.heartbeat.icon
+                        | 选课程
+                    a.pink.item(href="/student/message")
+                        i.comments.outline.camera.icon
+                        | 留言板
+                    a.blue.item
+                        i.cloud.upload.icon
+                        | 上传作业
+                .ui.modal
+                    i.close.icon
+                    .header 上传作业
+                    .image.content
+                        .description
+                            if res.data.homework && res.data.homework.file
+                                .done.homework.ui.message
+                                    | 已上传过作业：
+                                    a(href="#{res.data.homework.file}" download) 作业下载
+                            form.ui.form.upload(enctype="multipart/form-data")
+                                .field
+                                    label 文件
+                                    input(type="file" name="file" multiple="multiple")
+                    .actions
+                        .ui.button.red.deny 取消
+                        .ui.button.primary.approve 确定
+    script(src="/js/student-all.js")

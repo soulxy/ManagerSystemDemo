@@ -10,11 +10,13 @@ export default class RedisStore extends Store {
     async get(sid) {
         // return await (this.redis.get(`SESSION:${sid}`));
         try{
+            // console.log('--->',`${sid}`);
             let oRedis = await (this.redis.get(`SESSION:${sid}`));
-            return JSON.parse(oRedis);
+            // console.log('---get-->',oRedis == 'object' ? oRedis : JSON.parse(oRedis));
+            return typeof oRedis == 'object' ? oRedis : JSON.parse(oRedis);
         }catch(e){
             return {
-                errro:e
+                error:e
             };
         }
 
@@ -25,7 +27,7 @@ export default class RedisStore extends Store {
         if(!opts.sid) {
             opts.sid = this.getID(24);
         }
-        await this.redis.set(`SESSION:${opts.sid}`, session);
+        await this.redis.set(`SESSION:${opts.sid}`, JSON.stringify(session));
         return opts.sid;
     }
 

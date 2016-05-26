@@ -1,0 +1,44 @@
+//-Created by Administrator on 2016/5/25.
+
+
+
+extends ../layout
+
+block head
+    link(rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css')
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+    link(href='/css/student-all.css' rel='stylesheet')
+block body
+    include ./top
+    .student.choose.teacher
+        - var res = result
+        if res && res.status && res.status.code == 500
+            p 哦噢，出错了QAQ
+            p #{res.status.msg}
+        else if res.status.code == 200
+            .ui.comments
+                if res.data && res.data.length > 0
+                    - each group in res.data
+                        .comment
+                            a.avatar
+                                img(src="/images/avatar/small/stevie.jpg")
+                            .content
+                                a.author Stevie Feliciano
+                                .metadata
+                                    .date 2 day ago
+                                    .rating
+                                        i.star.icon
+                                        | 5 Faves
+                                .text
+                                    | Hey guys, I hope this example comment is helping you read this documentation
+                else
+                    .comment
+                        | 留言板为空
+            .ui.reply.form
+                .field
+                    textarea
+                .ui.blue.labeled.submit.icon.button
+                    i.icon.edit
+                    | 发布留言
+    script(src='/js/student-all.js')

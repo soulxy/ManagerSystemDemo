@@ -1,0 +1,32 @@
+//-Created by Administrator on 2016/5/24.
+
+extends ../layout
+
+block head
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+    link(href='/css/company-all.css' rel='stylesheet')
+block body
+    include ./top
+    .company.rating
+        .ui.container.panel
+            .ui.warning.message
+                i.close.icon
+                .header 评分系统只能评价一次，请谨慎操作！
+            -var res = result && result.data
+            .ui.list
+                each group in res
+                    .item
+                        -var imgUrl = group.gender=='female'?"/images/avatar/small/rachel.png":"/images/avatar/small/matthew.png"
+                        img.ui.avatar.image(src="#{imgUrl}")
+                        .content
+                            .header #{group.id}
+                                .description #{group.name}
+                        .ui.star.rating(data-rating="3" data-max-rating="5" data-cid="#{group.cid}" data-id="#{group.id}")
+
+            button.ui.button.primary 提交评分
+
+    script(src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.js")
+    script(src="/js/company-all.js")
+

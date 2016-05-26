@@ -1,7 +1,6 @@
 /**
- * Created by Administrator on 2016/5/6.
+ * Created by Administrator on 2016/5/7.
  */
-
 ;(
     function(){
         $('.dropdown')
@@ -15,13 +14,14 @@
 
         //确认弹层
         $('.item.delete').on('click', function(e) {
-            let $this = $(e.target);
+
+            let $this = $(e.target);console.log('===>',$this.data('id'));
             let deleteAJAX = {
                 method: 'delete',
-                action: 'delete company',
+                action: 'delete news',
                 urlData: { id: $this.data('id') },
                 beforeSend: function (settings) {
-                    console.log('beforeSend',$this.data('id'),settings);
+                    console.log('beforeSend',settings);
                     NProgress.start();
                     return settings;
                 },
@@ -60,7 +60,7 @@
                         $.ajax({
                             type: 'DELETE',
                             dataType: 'json',
-                            url: '/admin/companies/deleteCom/'+$this.data('id'),
+                            url: '/admin/news/deleteNews/'+JSON.parse($this.data('id')),
                             beforeSend: function() {
                                 console.log('beforeSend');
                                 NProgress.start();
@@ -88,6 +88,5 @@
                 .modal('show')
             ;
         });
-
     }
 )(flage);

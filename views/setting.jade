@@ -1,0 +1,32 @@
+//-Created by Administrator on 2016/5/11.
+
+extends ./layout
+
+block head
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+block body
+    include ./top
+    .teacher.update.password
+        .ui.container
+            .ui.piled.segment
+                h4.ui.header
+                    .ui.breadcrumb
+                        a.section(href="/admin") 首页
+                        i.right.angle.icon.divider
+                        a.section 修改密码
+                form.ui.form
+                    .field.required
+                        label 旧密码
+                        input(type="password" name="oldPwd" placeholder="旧密码")
+                    .field.required
+                        label 新密码
+                        input(type="password" name="newPwd" placeholder="新密码")
+                    .field.required
+                        label 再次确认
+                        input(type="password" name="renewPwd" placeholder="再次确认")
+                    .ui.error.message
+                    button.ui.button.primary.submit 提交
+
+    include ./modal
+    script(src="/js/setting.js")

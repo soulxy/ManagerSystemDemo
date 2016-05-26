@@ -1,0 +1,58 @@
+//-Created by Administrator on 2016/5/25.
+
+
+extends ../layout
+
+block head
+    link(rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css')
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+    link(href='/css/student-all.css' rel='stylesheet')
+block body
+    include ./top
+    .student.choose.teacher
+        - var res = result
+        if res && res.status && res.status.code == 500
+            p 哦噢，出错了QAQ
+            p #{res.status.msg}
+        else if res.status.code == 200
+            .ui.tree.stackable.cards
+                - each group in res.data.teachers
+                    .ui.card
+                        .content
+                            .right.floated.meta
+                            -var imgUrl = group.gender=='female'?"/images/avatar/small/rachel.png":"/images/avatar/small/matthew.png"
+                            img.ui.avatar.image(src="#{imgUrl}")
+                            | #{group.name} - #{group.company.name}
+                        .content
+                            span.right.floated
+                                i.wait.icon
+                                | #{group.company.mission.time || '空'}
+                            i.comment.icon
+                            | #{group.company.mission.title || '空'}
+                        .extra.content
+                            .ui.vertical.animated.button.fluid(tabindex="0" data-id="#{group.id}")
+                                .hidden.content 选择
+                                .visible.content
+                                    i.heart.outline.icon
+            .ui.modal.coupled.first
+                i.close.icon
+                .header 选择培训课程
+                .image.content
+                    .description
+                        p 是否确认选择
+                .actions
+                    .ui.button.red.deny 取消
+                    .ui.button.primary.approve 确定
+            .ui.modal.coupled.second
+                i.close.icon
+                .header 执行结果
+                .image.content
+                    .description
+                        p 成功
+                .actions
+                    .ui.button.approve
+                        i.checkmark.icon
+                        | 确定
+
+    script(src='/js/student-all.js')

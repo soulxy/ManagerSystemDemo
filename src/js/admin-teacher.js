@@ -22,7 +22,7 @@
     ;
 
     //获取公司列表
-    $('.ui.dropdown.company')
+    $('.ui.dropdown.companies')
         .dropdown({
             apiSettings: {
                 action: 'get company list',

@@ -59,7 +59,7 @@
                         nextPage = '/teacher';
                         break;
                     case 3:
-                        nextPage = '/compony';
+                        nextPage = '/company';
                         break;
                     case 2:
                     default:

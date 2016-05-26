@@ -12,8 +12,6 @@ router.get('/admin', async (ctx, next) => {
   let user;
   if(ctx.session && ctx.session.userObj) {
     user = ctx.session.userObj;
-  }else {
-    await ctx.render
   }
   await ctx.render('admin',{
    user: ctx.session.userObj

@@ -1,0 +1,83 @@
+//-Created by Administrator on 2016/5/23.
+extends ../layout
+
+block head
+    link(rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css')
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+    link(href='/css/company-all.css' rel='stylesheet')
+block body
+    include ./top
+    - var res = result
+      if res && res.status && res.status.code == 500
+        p 哦噢，出错了QAQ
+      else if res.status.code == 200
+        .company.all.right
+            .ui.container.panel
+                .ui.equal.width.stretched.grid
+                    .column
+                        .ui.segment
+                            a(class="ui right pointing basic teal ribbon label") Operation
+                            | #{res.data.company.name}
+            .ui.container.display
+                h4.ui.horizontal.divider.header
+                    i.tag.icon
+                    | 学校指导老师
+                p #{res.data.teacher.name || '空'}
+                h4.ui.horizontal.divider.header
+                    i.bar.chart.icon
+                    | 培训项目
+                table.ui.definition.table
+                    tr
+                        td.two.wide.column 标题
+                        td.title #{res.data.mission && res.data.mission.title || '空'}
+                    tr
+                        td  内容
+                        td.content #{res.data.mission && res.data.mission.content || '空'}
+                    tr
+                        td  时间
+                        td.time #{res.data.mission && res.data.mission.time || '空'}
+            .ui.container.relation
+                .ui.special.cards
+            .ui.container.operation
+                .ui.large.steps
+                    .step.checkout
+                        i.users.icon
+                        .content
+                            .title
+                                a(href="/company/rating") 学生考核
+                    .active.step.mission
+                        i.browser.icon
+                        .content
+                            .title 发布任务
+                .ui.modal
+                    .header 发布培训任务
+                    .image.content
+                        .description(width="100%")
+                            form.ui.form
+                                .field.required
+                                    label 培训标题
+                                    input(type="text" name="title" placeholder="培训标题")
+                                .field.required
+                                    label 培训内容
+                                    textarea(name="content" placeholder="培训内容")
+                                .field.required
+                                    label 培训时间(为期一个月)
+                                    input#date-input(type="text" name="time" placeholder="培训时间" data-type='date')
+                                    #material-header-holder(style="display:none")
+                                        .ui-datepicker-material-header
+                                            .ui-datepicker-material-day
+                                            .ui-datepicker-material-date
+                                                .ui-datepicker-material-month
+                                                .ui-datepicker-material-day-num
+                                                .ui-datepicker-material-year
+                                .ui.error.message
+                    .actions
+                        .ui.cancel.button.red 取消
+                        .ui.approve.button.primary 确认
+    //script(src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js")
+    script(src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.js")
+    //script.
+    //    window.flage = flage;
+    script(src="/js/company-all.js")

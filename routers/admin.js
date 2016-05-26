@@ -7,6 +7,7 @@
  * 公司管理：增删改查
  * 新闻管理：增删改查
  * 留言管理：删查
+ * 设置管理：修改密码
  */
 
 let router = require('koa-router')();
@@ -347,8 +348,8 @@ router.get('/company', async (ctx, next) => {
         result = {
             status: { code: 500, msg: e || '服务器错误' }
         };
-    }finally {console.log('com',result.data);
-        await ctx.render('company', { results: result});
+    }finally {console.log('--->run');
+        await ctx.render('company.jade', { results: result});
     }
 });
 
@@ -613,6 +614,55 @@ router.del('/message/deleteMsg/:id', async (ctx, next) => {
     }finally {
         ctx.body = result;
     }
+});
+
+//修改密码页展示
+router.get('/setting', async (ctx, next) => {
+    await ctx.render('setting');
+});
+//修改密码
+router.put('/setting/updateSetting', async (ctx, next) => {
+    let pwdObj = ctx.request.body;
+    let result = {};
+    let userObj = ctx.session.userObj;
+    console.log('----修改密码>',pwdObj,userObj);
+    ctx.body = {
+        status: {code :200},data:userObj
+    };
+    console.log('----');
+   /* try {
+        if(!pwdObj || (!pwdObj.oldPwd || !pwdObj.newPwd || !pwdObj.renewPwd)) {
+            errorFun('输入为空');
+        }
+        if(pwdObj.newPwd != pwdObj.renewPwd) {
+            errorFun('两次新密码不一致');
+        }
+        let user = await ctx.request.db.get('user').findOne({ id: userObj.id});
+        console.log('user---------->',user);
+        if(!user) {
+            result = {
+                status: { code: 400, msg: '不存在该用户'}
+            };
+        }else if(user.password != pwdObj.oldPwd) {
+            result = {
+                status: { code: 401, msg: '原始密码输入错误'}
+            };
+            console.log('res===1>',result);
+        }else {
+            let re = await ctx.request.db.get('user').update({ id: user.id}, { $set: {'password': userObj.newPwd } } );
+            console.log('--->',re);
+            result = {
+                status: { code: 200, msg: '修改成功'}
+            };
+        }
+
+    }catch(e) {console.log('error--->',e);
+        result = {
+            status: { code: 500, msg: e || '服务器错误'}
+        };
+    }finally {console.log('-------->/n',result);
+        ctx.body = result;
+    }*/
 });
 
 module.exports = router;
