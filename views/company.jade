@@ -27,7 +27,7 @@ block body
                                         .text #{group.id}
                                         i.dropdown.icon
                                         .menu
-                                            a.item(href="/admin/companies/update/"+group.id) 修改
+                                            a.item(href="/admin/company/update/"+group.id) 修改
                                             .item.delete(data-id=group.id) 删除
                             td #{group.name}
                             td #{group.address}
@@ -38,18 +38,18 @@ block body
                                 - var currentPage = res.data.pageObj.currentPage*1, countPage = res.data.pageObj.countPage*1
                                 - var previous =  currentPage>1 ? (currentPage - 1) : null;
                                 - var next = countPage > currentPage ? (currentPage + 1) : null;
-                                a.icon.item(href="/admin/companies?page=" + previous class=previous?'':'disabled')
+                                a.icon.item(href="/admin/company?page=" + previous class=previous?'':'disabled')
                                     i.left.chevron.icon
                                 - var n = 1;
                                 - while (n <= countPage)
-                                    a.item(href="/admin/companies?page=" + n class=currentPage == n ? 'active':'') #{n++}
-                                a.icon.item(href="/admin/companies?page=" + next class=next?'':'disabled')
+                                    a.item(href="/admin/company?page=" + n class=currentPage == n ? 'active':'') #{n++}
+                                a.icon.item(href="/admin/company?page=" + next class=next?'':'disabled')
                                     i.right.chevron.icon
                         th(colspan="1")
-                            a.ui.right.floated.small.primary.labeled.icon.button(href="/admin/companies/add")
+                            a.ui.right.floated.small.primary.labeled.icon.button(href="/admin/company/add")
                                 i.user.icon
                                 | Add
     include ./modal
     script.
         window.flage = !{flage};
-    script(src="/js/companies.js")
+    script(src="/js/company.js")

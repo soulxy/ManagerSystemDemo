@@ -3,6 +3,7 @@
  */
 let router = require('koa-router')();
 let _ = require('lodash');
+let format = require('date-format');
 
 let errorFun = function(msg){
     throw new Error(msg);
@@ -137,20 +138,72 @@ router.post('/chooseTea', async (ctx, next) => {
 //留言页面
 router.get('/message', async (ctx, next) => {
     let result;
+    let userArr = [];
+
+    let params = {}, pageObj = {};
+    params.page = ctx.request.query.page || 1;
+    params.pageSize = ctx.request.query.pageSize || 2;
+
     try {
-        let message = await ctx.request.db.get('message').find();
+        let message = await ctx.request.db.get('message').find({}, { limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
+        let count = await ctx.request.db.get('message').count();
+        let user = await ctx.request.db.get('student').find();
+
+        pageObj.countPage = Math.ceil(count / params.pageSize);
+        pageObj.currentPage = params.page;
+
+
+        if(message && user) {
+            _.forEach(user, function(item) {
+                userArr[item.id] = item;
+            });
+
+            _.forEach(message, function(item) {
+                item.user = userArr[item.uid];
+            });
+        }
+
         result = {
             status: { code: 200, msg: '查询成功'},
-            data: message
+            data: { message: message, pageObj: pageObj }
         };
     } catch(e) {
         result = errorRes(e);
     } finally {
-        console.log('--->1',result);
+        console.log('--------1>',result);
         await ctx.render('./students/message', {
             result: result
         });
     }
 });
+
+//发布留言
+
+router.post('/addMsg', async (ctx, next) => {
+    let result;
+    let msgObj = ctx.request.body;
+    let userId = ctx.session.userObj && ctx.session.userObj.id;
+    msgObj.datetime = format.asString(new Date());
+    msgObj.uid = userId;
+    let allMsgObj = {};
+
+    try {
+        await ctx.request.db.get('message').insert(msgObj);
+        let user = await ctx.request.db.get('student').findOne({id: userId});
+        allMsgObj.message = msgObj;
+        allMsgObj.message.user = user;
+        result = {
+            status: { code: 200 , msg : '添加成功'},
+            data: allMsgObj
+        };
+    } catch(e) {
+        result = errorRes(e);
+    } finally {
+        console.log('----------->res',result);
+        ctx.body = result;
+    }
+});
+
+//回复留言
 
 module.exports = router;

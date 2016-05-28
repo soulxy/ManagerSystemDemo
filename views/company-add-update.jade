@@ -14,7 +14,7 @@ block body
                     .ui.breadcrumb
                         a.section(href="/admin") 首页
                         i.right.angle.icon.divider
-                        a.section(href="/admin/companies") 实习基地管理
+                        a.section(href="/admin/company") 实习基地管理
                         i.right.angle.icon.divider
                         - if(result && result.status && result.status.code == 200)
                             .active.section 修改
@@ -40,4 +40,4 @@ block body
     include ./modal
     script.
         window.res = !{res};
-    script(src='/js/admin-companies.js')
+    script(src='/js/admin-company.js')

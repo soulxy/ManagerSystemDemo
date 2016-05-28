@@ -23,7 +23,7 @@ router.get('/teacher', async (ctx, next) => {
     let result,companyArr = [];
     let params = {},pageObj = {};
     params.page = ctx.request.query.page || 1;
-    params.pageSize = ctx.request.pageSize || 2;
+    params.pageSize = ctx.request.query.pageSize || 2;
 
     try {
         let teachersList = await ctx.request.db.get('teacher').find({},{ limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
@@ -183,7 +183,7 @@ router.get('/student', async (ctx, next) => {
     let result,companyArr = [], teacherArr = [];
     let params = {},pageObj = {};
     params.page = ctx.request.query.page || 1;
-    params.pageSize = ctx.request.pageSize || 2;
+    params.pageSize = ctx.request.query.pageSize || 2;
 
     try {
         let studentList = await ctx.request.db.get('student').find({},{ limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
@@ -320,7 +320,7 @@ router.get('/company', async (ctx, next) => {
     let result, teacherArr = [];
     let params = {}, pageObj = {};
     params.page = ctx.request.query.page || 1;
-    params.pageSize = ctx.request.pageSize || 2;
+    params.pageSize = ctx.request.query.pageSize || 2;
 
     try {
         let companyList = await ctx.request.db.get('company').find({},{ limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
@@ -348,7 +348,7 @@ router.get('/company', async (ctx, next) => {
         result = {
             status: { code: 500, msg: e || '服务器错误' }
         };
-    }finally {console.log('--->run');
+    }finally {
         await ctx.render('company.jade', { results: result});
     }
 });
@@ -399,7 +399,7 @@ router.post('/company/addCom', async (ctx, next) => {
 });
 
 //修改公司
-router.put('/company/updataCom/:id', async (ctx, next) => {
+router.put('/company/updateCom/:id', async (ctx, next) => {
     let cid = ctx.params.id;
     let companyObj = ctx.request.body;
     let result;
@@ -452,7 +452,7 @@ router.get('/news', async (ctx, next) => {
     let result;
     let params = {}, pageObj = {};
     params.page = ctx.request.query.page || 1;
-    params.pageSize = ctx.request.pageSize || 2;
+    params.pageSize = ctx.request.query.pageSize || 2;
 
     try {
         let newsList = await ctx.request.db.get('news').find({},{ limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
@@ -577,33 +577,47 @@ router.del('/news/deleteNews/:id', async (ctx, next) => {
 router.get('/message', async (ctx, next) => {
     let result;
     let params = {}, pageObj = {};
+    let studentArr = [];
     params.page = ctx.request.query.page || 1;
-    params.pageSize = ctx.request.pageSize || 2;
+    params.pageSize = ctx.request.query.pageSize || 10;
 
     try {
-        let newsList = await ctx.request.db.get('message').find({},{ limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
-        let count = await ctx.request.db.get('message').count();
+        let message = await ctx.request.db.get('message').find({},{ limit: params.pageSize, skip:(params.page - 1)*params.pageSize});
+        let count = message.length;
 
         pageObj.countPage = Math.ceil(count / params.pageSize);
         pageObj.currentPage = params.page;
+
+        let student = await ctx.request.db.get('student').find();
+        if(student) {
+            _.forEach( student, function(item) {
+                studentArr[item.id] = item;
+            });
+
+            _.forEach(message, function(item) {
+                item.student = studentArr[item.uid];
+            });
+        }
+
         result = {
-            status: { code: 200, msg: '查找成功' }, data:{ message: messageList, pageObj: pageObj}
+            status: { code: 200, msg: '查找成功' }, data:{ message: message, pageObj: pageObj}
         };
     }catch(e) {
         result = {
             status: { code: 500, msg: e || '服务器错误' }
         };
     }finally {
-        await ctx.render('message', { results: result});
+        await ctx.render('message', { result: result});
     }
 });
 
 //删除留言
 router.del('/message/deleteMsg/:id', async (ctx, next) => {
+
     let mid = ctx.params.id;
     let result;
     try {
-        await ctx.request.db.get('news').remove({ _id: mid});
+        await ctx.request.db.get('message').remove({ _id: mid});
         result = {
             status: { code: 200, msg: '删除成功'}
         };
@@ -612,6 +626,7 @@ router.del('/message/deleteMsg/:id', async (ctx, next) => {
             status: { code: 500, msg: e || '服务器错误' }
         };
     }finally {
+        console.log('-->-->',result);
         ctx.body = result;
     }
 });
@@ -625,12 +640,8 @@ router.put('/setting/updateSetting', async (ctx, next) => {
     let pwdObj = ctx.request.body;
     let result = {};
     let userObj = ctx.session.userObj;
-    console.log('----修改密码>',pwdObj,userObj);
-    ctx.body = {
-        status: {code :200},data:userObj
-    };
-    console.log('----');
-   /* try {
+
+    try {
         if(!pwdObj || (!pwdObj.oldPwd || !pwdObj.newPwd || !pwdObj.renewPwd)) {
             errorFun('输入为空');
         }
@@ -638,7 +649,6 @@ router.put('/setting/updateSetting', async (ctx, next) => {
             errorFun('两次新密码不一致');
         }
         let user = await ctx.request.db.get('user').findOne({ id: userObj.id});
-        console.log('user---------->',user);
         if(!user) {
             result = {
                 status: { code: 400, msg: '不存在该用户'}
@@ -647,22 +657,20 @@ router.put('/setting/updateSetting', async (ctx, next) => {
             result = {
                 status: { code: 401, msg: '原始密码输入错误'}
             };
-            console.log('res===1>',result);
         }else {
             let re = await ctx.request.db.get('user').update({ id: user.id}, { $set: {'password': userObj.newPwd } } );
-            console.log('--->',re);
             result = {
                 status: { code: 200, msg: '修改成功'}
             };
         }
 
-    }catch(e) {console.log('error--->',e);
+    }catch(e) {
         result = {
             status: { code: 500, msg: e || '服务器错误'}
         };
     }finally {console.log('-------->/n',result);
         ctx.body = result;
-    }*/
+    }
 });
 
 module.exports = router;

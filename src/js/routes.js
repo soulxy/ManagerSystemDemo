@@ -16,10 +16,10 @@ $.fn.api.settings
          'update student': '/admin/teacher/updateStu/{id}',//修改学生
          'delete student': '/admin/teacher/deleteStu/{id}',//删除学生
 
-         'add company': '/admin/companies/addCom',
-         'update company': '/admin/companies/updateCom',
-         'delete company': '/admin/companies/deleteCom',
-         'get company list': '/companies/list',//公司列表
+         'add company': '/admin/company/addCom',
+         'update company': '/admin/company/updateCom/{id}',
+         'delete company': '/admin/company/deleteCom/{id}',
+         'get company list': '/company/list',//公司列表
 
          'add news': '/admin/news/addNews',
          'update news': '/admin/news/updateNews/{id}',
@@ -31,4 +31,7 @@ $.fn.api.settings
 
         //company
          'edit company mission': '/company/editMission',//添加修改任务
+
+        //student
+        'add message': '/student/addMsg',//添加留言
 };

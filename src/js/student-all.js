@@ -81,5 +81,73 @@
             ;
         });
 
+        //发布留言
+        let $msgBtn = $('.ui.blue.labeled');
+        let $msgForm = $('.ui.form');
+
+        let formValidationRules = {
+            title: {
+                identifier: 'title',
+                rules: [{
+                    type   : 'empty',
+                    prompt : '请输入标题'
+                }]
+            },
+            content: {
+                identifier: 'content',
+                rules: [{
+                    type   : 'empty',
+                    prompt : '请输入内容'
+                }]
+            }
+        };
+        let addAJAX = {
+            action: 'add message',
+            method: 'post',
+            beforeSend: function (settings) {
+                console.log('beforeSend');
+                NProgress.start();
+                settings.data = $msgForm.form('get values',['title','content']);
+                return settings;
+            },
+            onSuccess: function (response) {
+                NProgress.done();
+                console.log('--->1',response);
+                location.href = '/student/message';
+            },
+            onFailure: function (response) {
+                NProgress.done();
+                console.log('===>2',response);
+                errorModel();
+            },
+            onError: function (errorMessage) {
+                NProgress.done();
+                console.log('===>3',errorMessage);
+            },
+            onAbort: function (errorMessage) {
+                NProgress.done();
+                console.log('===>4',errorMessage);
+            }
+        };
+
+        $msgForm.form({
+            fields : formValidationRules,
+            onSuccess: function(event, element){
+                event.preventDefault();
+            },
+            onFailure: function(formErrors, fields){
+                return false;
+            }
+        });
+
+        $msgBtn.on('click', function(e) {
+            $msgForm.form('valid form');
+            if($msgForm.form('is vaild')) {
+                $msgForm.api(addAJAX);
+            }else {
+                return false;
+            }
+        });
+
     }
 )();

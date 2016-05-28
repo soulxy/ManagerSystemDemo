@@ -60,7 +60,7 @@
                         $.ajax({
                             type: 'DELETE',
                             dataType: 'json',
-                            url: '/admin/companies/deleteCom/'+$this.data('id'),
+                            url: '/admin/company/deleteCom/'+$this.data('id'),
                             beforeSend: function() {
                                 console.log('beforeSend');
                                 NProgress.start();

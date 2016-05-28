@@ -1,0 +1,115 @@
+//-Created by Administrator on 2016/5/23.
+extends ../layout
+
+block head
+    link(rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css')
+    link(href='/css/top.css' rel="stylesheet")
+    link(href='/css/teacher.css' rel='stylesheet')
+    link(href='/css/teacher-all.css' rel='stylesheet')
+block body
+    include ./top
+    - var res = result
+    if res && res.status && res.status.code == 500
+        p 哦噢，出错了QAQ
+    else if res.status.code == 200
+        - var res = res.data
+        .teacher.all.right
+            .ui.container.panel
+                .ui.equal.width.stretched.grid
+                    .column
+                        .ui.segment
+                            a(class="ui right pointing basic teal ribbon label") Operation
+                            | #{res.teacher.name}
+            .ui.container.display
+                h4.ui.horizontal.divider.header
+                    i.tag.icon
+                    | 选择的培训基地
+                p 公司名：#{res.company && res.company.name || '空'}
+                p 培训内容：#{res.mission && res.mission.title}
+                h4.ui.horizontal.divider.header
+                    i.bar.chart.icon
+                    | 学生列表
+                p 注：公司成绩最高分5，最低分1.
+                table.ui.celled.table.teal
+                    thead
+                        tr
+                            th 工号
+                            th 姓名
+                            th 性别
+                            th 培训公司成绩
+                            th 老师成绩
+                            th 最终成绩
+                    tbody
+                        - if(res.students && res.students.length==0)
+                            tr
+                                td.five.wide.row 没有学生选择你的课程
+                        - else
+                            - each group in res.students
+                                tr
+                                    td
+                                        .ui.ribbon.label
+                                            .ui.dropdown.inline
+                                                .text #{group.id}
+                                                i.dropdown.icon
+                                                - var groupString = JSON.stringify(group)
+                                                .menu.scoring(data-obj="#{groupString}")
+                                                    a.item.scoring 打分
+                                    td #{group.name}
+                                    td #{group.gender == 'male' ? '男' : '女'}
+                                    td.rating #{group.rating || 0}
+                                    td.score #{group.score || 0}
+                                    -var total = (group.score == '')?'':parseFloat((group.rating || 0)*20*0.7) + parseFloat((group.score || 0)*0.3)
+                                    td.total #{total}
+                    tfoot.full-width
+                        tr
+                            th(colspan="6")
+                                .ui.left.floated.pagination.menu
+                                    - var currentPage = res.pageObj.currentPage*1, countPage = res.pageObj.countPage*1
+                                    - var previous =  currentPage>1 ? (currentPage - 1) : null;
+                                    - var next = countPage > currentPage ? (currentPage + 1) : null;
+                                    a.icon.item(href="/admin/teacher?page=" + previous class=previous ? '' : 'disabled')
+                                        i.left.chevron.icon
+                                    - var n = 1;
+                                    - while (n <= countPage)
+                                        a.item(href="/teacher?page=" + n class=currentPage == n ? 'active' : '') #{n++}
+                                    a.icon.item(href="/teacher?page=" + next class=next ? '' : 'disabled')
+                                        i.right.chevron.icon
+
+            .ui.container.operation
+                .ui.three.item.labeled.icon.menu
+                    a.pink.item.active
+                        i.comments.archive.icon
+                        | 选择培训课程
+                .ui.modal.company
+                    .header 选择培训课程
+                    .image.content
+                        .description(width="100%")
+                            form.ui.form.company
+                                .field.required
+                                    label 带队公司
+                                    .ui.multiple.search.selection.dropdown.companies
+                                        input(type="hidden" name="company")
+                                        i.dropdown.icon
+                                        input(type="text" class="search" tabindex="0" )
+                                        .default.text 公司名
+                                        .menu(tabindex="-1")
+                                .ui.error.message
+                    .actions
+                        .ui.cancel.button.red 取消
+                        .ui.approve.button.primary 确认
+            //-打分
+            .ui.modal.scoring
+                .header 评分
+                .image.content
+                    .description(width="100%")
+                        .homework.display
+                            a(href="" download) 作业下载
+                        form.ui.form.scoring
+                            .field.required
+                                label 学生平时成绩
+                                input(type="text" name="score" placeholder="学生平时成绩")
+                            .ui.error.message
+                .actions
+                    .ui.cancel.button.red 取消
+                    .ui.approve.button.primary 确认
+    script(src="/js/teacher-all.js")

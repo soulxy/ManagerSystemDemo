@@ -115,6 +115,7 @@ router.get('/rating', async (ctx, next) => {
 //打分
 router.post('/addRating', async (ctx, next) => {
     let ratingArr = ctx.request.body.ratingArr;
+    ratingArr.score = '';
     let result;
     try {
         await ctx.request.db.get('rating').insert(ratingArr);

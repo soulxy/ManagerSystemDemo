@@ -82,7 +82,24 @@
             $form.form('vaild form');
             if($form.form('is vaild')) {
                 console.log('提交表单');
-                $form.api(updateAJAX);
+                // $form.api(updateAJAX);
+                $.ajax({
+                    url: '/admin/setting/updateSetting',
+                    method: 'put',
+                    data: $form.form('get values',['oldPwd', 'newPwd', 'renewPwd']),
+                    beforeSend: function() {
+                        NProgress.start();
+                    }
+                }).done(function(res) {
+                    NProgress.done();
+                    if(res && res.status && res.status.code == 500) {
+                        errorModel();
+                    }else if(res.status.code == 400) {
+                        noFoundModel();
+                    }else if(res.status.code == 200) {
+                        location.href = '/admin';
+                    }
+                });
             }else {
                 return false;
             }

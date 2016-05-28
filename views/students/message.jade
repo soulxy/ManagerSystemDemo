@@ -17,27 +17,45 @@ block body
             p 哦噢，出错了QAQ
             p #{res.status.msg}
         else if res.status.code == 200
-            .ui.comments
-                if res.data && res.data.length > 0
-                    - each group in res.data
+            h4.ui.horizontal.divider.header
+                i.unordered.list.icon
+                | 留言列表
+            .ui.comments.message
+                if res.data.message && res.data.message.length >= 0
+                    - each group in res.data.message
                         .comment
                             a.avatar
-                                img(src="/images/avatar/small/stevie.jpg")
+                                - var imgUrl = group.user.gender == 'female'?'/images/avatar/small/stevie.jpg':'/images/avatar/small/matt.jpg'
+                                img(src="#{imgUrl}")
                             .content
-                                a.author Stevie Feliciano
+                                a.author #{group.user.name}
                                 .metadata
-                                    .date 2 day ago
+                                    .date #{group.datetime.substring(0,19)}
                                     .rating
                                         i.star.icon
-                                        | 5 Faves
                                 .text
-                                    | Hey guys, I hope this example comment is helping you read this documentation
+                                    | #{group.content}
                 else
                     .comment
                         | 留言板为空
+            .ui.pagination.menu
+                - var currentPage = res.data.pageObj.currentPage*1, countPage = res.data.pageObj.countPage*1
+                - var previous =  currentPage>1 ? (currentPage - 1) : null;
+                - var next = countPage > currentPage ? (currentPage + 1) : null;
+                a.icon.item(href="/student/message?page=" + previous class=previous ? '' : 'disabled')
+                    i.left.chevron.icon
+                - var n = 1;
+                - while (n <= countPage)
+                    a.item(href="/student/message?page=" + n class=currentPage == n ? 'active' : '') #{n++}
+                a.icon.item(href="/student/message?page=" + next class=next ? '' : 'disabled')
+                    i.right.chevron.icon
+            h4.ui.horizontal.divider.header
+                i.paint.brush.icon
+                | 发布留言
             .ui.reply.form
                 .field
-                    textarea
+                    textarea(placeholder="留言内容" name="content")
+                .ui.error.message
                 .ui.blue.labeled.submit.icon.button
                     i.icon.edit
                     | 发布留言

@@ -75,7 +75,7 @@
         onSuccess: function (response) {
             NProgress.done();
             console.log('--->1',response);
-            location.href = '/admin/companies';
+            location.href = '/admin/company';
         },
         onFailure: function (response) {
             NProgress.done();
@@ -105,7 +105,7 @@
         onSuccess: function (response) {
             NProgress.done();
             console.log('--->1',response);
-            location.href = '/admin/companies';
+            location.href = '/admin/company';
         },
         onFailure: function (response) {
             NProgress.done();
