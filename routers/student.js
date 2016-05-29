@@ -20,8 +20,8 @@ router.get('/', async (ctx, next) => {
     try {
         let student = await ctx.request.db.get('student').findOne({ id: userId});
         let teacher = await ctx.request.db.get('teacher').findOne({ id: student.tid});
-        let company = await ctx.request.db.get('company').findOne({ id: student.cid});
-        let mission = await ctx.request.db.get('mission').findOne({ id: student.cid});
+        let company = await ctx.request.db.get('company').findOne({ id: teacher.cid});
+        let mission = await ctx.request.db.get('mission').findOne({ id: company.cid});
         let news = await ctx.request.db.get('news').find();
         let homework = await ctx.request.db.get('homework').findOne({ sid: userId});
         result = {
@@ -40,7 +40,7 @@ router.get('/', async (ctx, next) => {
             status: { code: 500, msg: e || '服务器错误'}
         };
     } finally {
-
+        console.log('----->',result.data.mission);
         await ctx.render('./students/index', {
             result: result
         });
