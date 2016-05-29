@@ -50,6 +50,23 @@ block body
                     tr
                         td  时间
                         td.time #{res.data.mission && res.data.mission.time || '空'}
+                h4.ui.horizontal.divider.header
+                    i.trophy.icon
+                    | 学生成绩
+                p 未出完整成绩时，请耐心等候。^_^
+                table.ui.definition.table
+                    tr
+                        td.two.wide.column 培训成绩
+                        -var rating = (res.data.rating && res.data.rating.rating)?res.data.rating.rating*20:'空'
+                        td #{rating}
+                    tr
+                        td.two.wide.column 平时成绩
+                        -var score = (res.data.rating && res.data.rating.score)?res.data.rating.score:'空'
+                        td #{score}
+                    tr
+                        td.two.wide.column 实际成绩
+                        -var total = (res.data.rating&&res.data.rating.score&&res.data.rating.score == '')?'空':parseFloat((res.data.rating.rating || 0)*20*0.7) + parseFloat((res.data.rating.score || 0)*0.3)
+                        td #{total}
             .ui.container.operation
                 .ui.three.item.labeled.icon.menu
                     a.red.item.active(href="/student/course")

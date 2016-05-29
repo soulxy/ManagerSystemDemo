@@ -24,6 +24,10 @@ router.get('/', async (ctx, next) => {
         let mission = await ctx.request.db.get('mission').findOne({ id: company.cid});
         let news = await ctx.request.db.get('news').find();
         let homework = await ctx.request.db.get('homework').findOne({ sid: userId});
+
+        //新加功能：学生成绩显示
+        let rating = await ctx.request.db.get('rating').findOne({ id: userId});
+
         result = {
             status : {code :200 , msg: '查询成功' },
             data: {
@@ -32,7 +36,8 @@ router.get('/', async (ctx, next) => {
                 company: company,
                 news: news,
                 mission: mission,
-                homework: homework
+                homework: homework,
+                rating: rating
             }
         };
     } catch(e) {
@@ -40,7 +45,6 @@ router.get('/', async (ctx, next) => {
             status: { code: 500, msg: e || '服务器错误'}
         };
     } finally {
-        console.log('----->',result.data.mission);
         await ctx.render('./students/index', {
             result: result
         });
